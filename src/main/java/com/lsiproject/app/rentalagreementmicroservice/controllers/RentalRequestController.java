@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 /**
  * Contrôleur REST pour gérer le cycle de vie des demandes de location (RentalRequest).
@@ -46,6 +48,15 @@ public class RentalRequestController {
     @GetMapping("/{id}")
     public ResponseEntity<RentalRequestDto> getRequestById(@PathVariable Long id) {
         RentalRequestDto request = rentalRequestService.getRequestById(id);
+        return ResponseEntity.ok(request);
+    }
+    /**
+     * GET /api/v1/rental-requests/
+     * Récupère tous les de;qndes
+     */
+    @GetMapping
+    public ResponseEntity<List<RentalRequestDto>> getRequestById() {
+        List<RentalRequestDto> request = rentalRequestService.getAllRequests();
         return ResponseEntity.ok(request);
     }
 

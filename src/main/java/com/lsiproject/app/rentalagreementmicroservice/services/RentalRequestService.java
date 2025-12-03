@@ -50,7 +50,7 @@ public class RentalRequestService {
         // 2. Création de l'entité
         RentalRequest request = new RentalRequest();
         request.setPropertyId(dto.getPropertyId());
-        request.setTenantId(principal.getIdUser()); // TenantId est pris du JWT (source de confiance)
+        request.setTenantId(principal.getIdUser());
         request.setStatus(RentalRequestStatus.PENDING); // Statut initial
 
         // 3. Sauvegarde et conversion
@@ -81,6 +81,10 @@ public class RentalRequestService {
         return rentalRequestMapper.toDto(request);
     }
 
+
+    public List<RentalRequestDto> getAllRequests(){
+        return rentalRequestMapper.toDtoList(rentalRequestRepository.findAll());
+    }
     /**
      * Met à jour le statut d'une demande (Étape 2).
      * @param requestId L'ID de la demande.
