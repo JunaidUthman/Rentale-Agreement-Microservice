@@ -21,13 +21,15 @@ public class RentalContractMapper {
                 .tenantId(entity.getTenantId())
                 .propertyId(entity.getPropertyId())
                 .securityDeposit(entity.getSecurityDeposit())
-                .rentPerMonth(entity.getRentPerMonth())
+                .rentAmount(entity.getRentAmount())
                 .startDate(entity.getStartDate())
                 .endDate(entity.getEndDate())
                 .isKeyDelivered(entity.getIsKeyDelivered())
                 .isPaymentReleased(entity.getIsPaymentReleased())
                 .state(entity.getState())
                 .createdAt(entity.getCreatedAt())
+                .TotalAmountToPay(entity.getTotalAmountToPay())
+                .PayedAmount(entity.getPayedAmount())
                 .build();
     }
 

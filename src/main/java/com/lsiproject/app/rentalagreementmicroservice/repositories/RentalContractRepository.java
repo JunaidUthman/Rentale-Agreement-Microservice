@@ -1,4 +1,4 @@
-package com.lsiproject.app.rentalagreementmicroservice.properties;
+package com.lsiproject.app.rentalagreementmicroservice.repositories;
 
 
 import com.lsiproject.app.rentalagreementmicroservice.entities.RentalContract;

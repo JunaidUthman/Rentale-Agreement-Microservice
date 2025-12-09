@@ -19,11 +19,13 @@ public class RentalContractDto {
     private Long tenantId;
     private Long propertyId;
     private Double securityDeposit;
-    private Double rentPerMonth;
+    private Double rentAmount;
     private LocalDate startDate;
     private LocalDate endDate;
     private Boolean isKeyDelivered;
     private Boolean isPaymentReleased;
     private RentalContractState state;
     private LocalDateTime createdAt;
+    private Double TotalAmountToPay;
+    private Double PayedAmount;
 }

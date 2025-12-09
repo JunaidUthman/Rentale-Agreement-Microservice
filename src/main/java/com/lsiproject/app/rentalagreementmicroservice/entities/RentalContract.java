@@ -8,6 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 /**
@@ -45,13 +46,18 @@ public class RentalContract {
     private Double securityDeposit;
 
     @Column(nullable = false)
-    private Double rentPerMonth; // Montant du loyer mensuel (pour les paiements hors-chaîne)
+    private Double rentAmount;
 
     @Column(nullable = false)
     private LocalDate startDate; // Date de début du contrat
 
     @Column(nullable = false)
     private LocalDate endDate; // Date de fin du contrat
+
+    private Double TotalAmountToPay;
+
+    private Double PayedAmount;
+
 
     @Column(nullable = false)
     private Boolean isKeyDelivered = false; // Confirmé par le locataire (déclenche activateAgreement)
@@ -70,4 +76,27 @@ public class RentalContract {
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime createdAt;
+
+
+    public Double calculateTotalAmount(LocalDate startDate, LocalDate endDate, Double rentAmount, String rentalType) {
+        if (startDate == null || endDate == null || rentAmount == null || rentalType == null) {
+            return 0.0;
+        }
+
+        String type = rentalType.trim().toUpperCase();
+
+        if (type.equals("DAILY")) {
+            // Calculate exact number of days
+            long days = ChronoUnit.DAYS.between(startDate, endDate);
+            return days * rentAmount;
+
+        } else if (type.equals("MONTHLY")) {
+            // Calculate only FULL months (ignoring extra days as requested)
+            long months = ChronoUnit.MONTHS.between(startDate, endDate);
+
+            return months * rentAmount;
+        }
+
+        throw new IllegalArgumentException("Unknown rental type: " + rentalType);
+    }
 }

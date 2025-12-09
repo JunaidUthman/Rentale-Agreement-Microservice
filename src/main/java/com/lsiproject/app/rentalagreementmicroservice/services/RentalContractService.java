@@ -6,7 +6,7 @@ import com.lsiproject.app.rentalagreementmicroservice.dtos.RentalContractDto;
 import com.lsiproject.app.rentalagreementmicroservice.entities.RentalContract;
 import com.lsiproject.app.rentalagreementmicroservice.enums.RentalContractState;
 import com.lsiproject.app.rentalagreementmicroservice.mappers.RentalContractMapper;
-import com.lsiproject.app.rentalagreementmicroservice.properties.RentalContractRepository;
+import com.lsiproject.app.rentalagreementmicroservice.repositories.RentalContractRepository;
 import com.lsiproject.app.rentalagreementmicroservice.security.UserPrincipal;
 import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.UUID; // Utilisé pour générer un ID temporaire
 
 /**
  * Service pour la gestion des contrats de location (RentalContract) en BDD.
@@ -87,9 +86,18 @@ public class RentalContractService {
         contract.setPropertyId(dto.getPropertyId());
 
         contract.setSecurityDeposit(dto.getSecurityDeposit());
-        contract.setRentPerMonth(dto.getRentPerMonth());
+        contract.setRentAmount(dto.getRentAmount());
         contract.setStartDate(dto.getStartDate());
         contract.setEndDate(dto.getEndDate());
+
+        String rentalType = "MONTHLY"; //TODO :: this should come from the property itself
+
+        Double TotalAmountToPay = contract.calculateTotalAmount(contract.getStartDate(), contract.getEndDate(), contract.getRentAmount(),rentalType );
+
+        contract.setTotalAmountToPay(TotalAmountToPay);
+        contract.setPayedAmount(contract.getRentAmount());
+
+
 
         // Statuts initiaux requis
         contract.setIsKeyDelivered(false);

@@ -7,7 +7,7 @@ import com.lsiproject.app.rentalagreementmicroservice.dtos.RentalRequestStatusUp
 import com.lsiproject.app.rentalagreementmicroservice.entities.RentalRequest;
 import com.lsiproject.app.rentalagreementmicroservice.enums.RentalRequestStatus;
 import com.lsiproject.app.rentalagreementmicroservice.mappers.RentalRequestMapper;
-import com.lsiproject.app.rentalagreementmicroservice.properties.RentalRequestRepository;
+import com.lsiproject.app.rentalagreementmicroservice.repositories.RentalRequestRepository;
 import com.lsiproject.app.rentalagreementmicroservice.security.UserPrincipal;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;

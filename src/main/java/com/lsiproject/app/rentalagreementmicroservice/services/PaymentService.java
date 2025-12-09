@@ -6,8 +6,8 @@ import com.lsiproject.app.rentalagreementmicroservice.entities.Payment;
 import com.lsiproject.app.rentalagreementmicroservice.entities.RentalContract;
 import com.lsiproject.app.rentalagreementmicroservice.enums.PaymentStatus;
 import com.lsiproject.app.rentalagreementmicroservice.mappers.PaymentMapper;
-import com.lsiproject.app.rentalagreementmicroservice.properties.PaymentRepository;
-import com.lsiproject.app.rentalagreementmicroservice.properties.RentalContractRepository;
+import com.lsiproject.app.rentalagreementmicroservice.repositories.PaymentRepository;
+import com.lsiproject.app.rentalagreementmicroservice.repositories.RentalContractRepository;
 import com.lsiproject.app.rentalagreementmicroservice.security.UserPrincipal;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
@@ -17,7 +17,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * Service pour la gestion de l'historique des paiements.
@@ -57,18 +56,28 @@ public class PaymentService {
         RentalContract contract = contractRepository.findById(dto.getRentalContractId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Rental contract not found."));
 
-        // 3. Création de l'entité
-        Payment payment = new Payment();
-        payment.setRentalContract(contract);
-        payment.setAmount(dto.getAmount());
-        payment.setTxHash(dto.getTxHash());
-        payment.setStatus(dto.getStatus() != null ? dto.getStatus() : PaymentStatus.CONFIRMED); // Par défaut CONFIRMED
-        payment.setTimestamp(dto.getTimestamp());
-        payment.setTenantId(dto.getTenantId());
+        if(contract.getPayedAmount() >= contract.getTotalAmountToPay()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Payment rejected: The contract is already fully paid.");
+        }
+        else{
+            // 3. Création de l'entité
+            Payment payment = new Payment();
+            payment.setRentalContract(contract);
+            payment.setAmount(dto.getAmount());
+            payment.setTxHash(dto.getTxHash());
+            payment.setStatus(dto.getStatus() != null ? dto.getStatus() : PaymentStatus.CONFIRMED); // Par défaut CONFIRMED
+            payment.setTimestamp(dto.getTimestamp());
+            payment.setTenantId(dto.getTenantId());
 
-        // 4. Sauvegarde
-        payment = paymentRepository.save(payment);
-        return paymentMapper.toDto(payment);
+            contract.setPayedAmount(contract.getPayedAmount()+ dto.getAmount());
+            contractRepository.save(contract);
+
+            // 4. Sauvegarde
+            payment = paymentRepository.save(payment);
+            return paymentMapper.toDto(payment);
+        }
+
     }
 
     // --- READ Operations ---

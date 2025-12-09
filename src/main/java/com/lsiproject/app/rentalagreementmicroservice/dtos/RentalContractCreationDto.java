@@ -16,7 +16,7 @@ public class RentalContractCreationDto {
 
     // Termes du contrat
     private Double securityDeposit;
-    private Double rentPerMonth;
+    private Double rentAmount;
     private LocalDate startDate;
     private LocalDate endDate;
 
