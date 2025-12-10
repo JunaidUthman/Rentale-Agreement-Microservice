@@ -1,5 +1,6 @@
 package com.lsiproject.app.rentalagreementmicroservice.dtos;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 /**
@@ -9,5 +10,5 @@ import lombok.Data;
 @Data
 public class RentalRequestCreationDto {
     // ID de la propriété pour laquelle la demande est faite
-    private Long propertyId;
+    @NotNull private Long propertyId;
 }

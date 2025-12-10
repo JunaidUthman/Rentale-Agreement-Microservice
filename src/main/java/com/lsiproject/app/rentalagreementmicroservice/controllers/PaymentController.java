@@ -15,7 +15,7 @@ import java.util.List;
  * Contrôleur REST pour la gestion des paiements (Historique et Enregistrement).
  */
 @RestController
-@RequestMapping("/api/v1/payments")
+@RequestMapping("/api/rentalAgreement-microservice/payments")
 public class PaymentController {
 
     private final PaymentService paymentService;

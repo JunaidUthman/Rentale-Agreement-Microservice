@@ -1,13 +1,16 @@
 package com.lsiproject.app.rentalagreementmicroservice.services;
 
 import com.lsiproject.app.rentalagreementmicroservice.dtos.KeyDeliveryUpdateDto;
+import com.lsiproject.app.rentalagreementmicroservice.dtos.PropertyResponseDTO;
 import com.lsiproject.app.rentalagreementmicroservice.dtos.RentalContractCreationDto;
 import com.lsiproject.app.rentalagreementmicroservice.dtos.RentalContractDto;
 import com.lsiproject.app.rentalagreementmicroservice.entities.RentalContract;
 import com.lsiproject.app.rentalagreementmicroservice.enums.RentalContractState;
 import com.lsiproject.app.rentalagreementmicroservice.mappers.RentalContractMapper;
+import com.lsiproject.app.rentalagreementmicroservice.openFeignClients.PropertyMicroService;
 import com.lsiproject.app.rentalagreementmicroservice.repositories.RentalContractRepository;
 import com.lsiproject.app.rentalagreementmicroservice.security.UserPrincipal;
+import feign.FeignException;
 import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
@@ -25,12 +28,15 @@ public class RentalContractService {
 
     private final RentalContractRepository contractRepository;
     private final RentalContractMapper contractMapper;
+    private final PropertyMicroService propertyMicroService;
 
     public RentalContractService(
             RentalContractRepository contractRepository,
+            PropertyMicroService propertyMicroService,
             RentalContractMapper contractMapper) {
         this.contractRepository = contractRepository;
         this.contractMapper = contractMapper;
+        this.propertyMicroService = propertyMicroService;
     }
 
     // =========================================================================================
@@ -74,6 +80,14 @@ public class RentalContractService {
      */
     @Transactional
     public RentalContractDto createContract(RentalContractCreationDto dto, UserPrincipal principal) {
+
+        PropertyResponseDTO property;
+
+        try {
+            property = propertyMicroService.getPropertyById(dto.getPropertyId());
+        } catch (FeignException.NotFound e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Property not found");
+        }
 
         // 1. Création de l'entité BDD
         RentalContract contract = new RentalContract();

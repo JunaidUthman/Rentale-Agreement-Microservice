@@ -6,6 +6,7 @@ import com.lsiproject.app.rentalagreementmicroservice.dtos.RentalRequestDto;
 import com.lsiproject.app.rentalagreementmicroservice.dtos.RentalRequestStatusUpdateDto;
 import com.lsiproject.app.rentalagreementmicroservice.security.UserPrincipal;
 import com.lsiproject.app.rentalagreementmicroservice.services.RentalRequestService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -18,7 +19,7 @@ import java.util.List;
  * Contrôleur REST pour gérer le cycle de vie des demandes de location (RentalRequest).
  */
 @RestController
-@RequestMapping("/api/v1/rental-requests")
+@RequestMapping("/api/rentalAgreement-microservice/rental-requests")
 public class RentalRequestController {
 
     private final RentalRequestService rentalRequestService;
@@ -34,7 +35,7 @@ public class RentalRequestController {
      */
     @PostMapping
     public ResponseEntity<RentalRequestDto> createRentalRequest(
-            @RequestBody RentalRequestCreationDto dto,
+            @Valid @RequestBody RentalRequestCreationDto dto,
             @AuthenticationPrincipal UserPrincipal principal) {
 
         RentalRequestDto createdRequest = rentalRequestService.createRequest(dto, principal);

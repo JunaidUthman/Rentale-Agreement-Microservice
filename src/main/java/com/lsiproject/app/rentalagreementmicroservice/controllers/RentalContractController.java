@@ -16,7 +16,7 @@ import java.util.List;
  * Contrôleur REST pour gérer le cycle de vie des contrats de location (RentalContract).
  */
 @RestController
-@RequestMapping("/api/v1/rental-contracts")
+@RequestMapping("/api/rentalAgreement-microservice/rental-contracts")
 public class RentalContractController {
 
     private final RentalContractService contractService;
